@@ -1,3 +1,9 @@
+body {
+    background-color: #2f7ad0;
+    margin: 0;
+    padding: 0;
+}
+
 .navbar-brand img{
     width: 45px;
     height: 45px;
@@ -21,3 +27,21 @@
     height: 100%;
     object-fit: cover;
 }
+
+.main-container {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%,0%);
+    margin-top: 50px;
+}
+.table {
+    width: 1250px;
+    height: auto;
+    margin-bottom: 45px;
+}
+.button-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
