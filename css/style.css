@@ -1,5 +1,5 @@
 body {
-    background-color: #2f7ad0;
+    background-color: #428ce0;
     margin: 0;
     padding: 0;
 }
@@ -43,5 +43,15 @@ body {
     position: absolute;
     bottom: 0;
     right: 0;
+}
+.btn-primary {
+    background-color: #212529;
+    transition: 0.25s;
+}
+.btn-primary:hover {
+    background-color: #424A52;
+}
+span .btn-primary:hover {
+    background-color: #AB0C29;
 }
 
