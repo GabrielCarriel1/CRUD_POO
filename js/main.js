@@ -1,5 +1,6 @@
 import {RegularClient, VipClient} from './client.js'
 
+//AGREGAR CLIENTE
 const form = document.getElementById('client-form')
 form.addEventListener('submit', function(event){
     event.preventDefault()
@@ -13,17 +14,27 @@ form.addEventListener('submit', function(event){
     if(radioCheck.checked){
         const descCheck = document.getElementById('desc')
         let card = descCheck.checked
+
+        //Instanciar nuevo cliente
         let cliente = new RegularClient(nombre, apellido, cedula, card)
-        const clienteJson = JSON.stringify(cliente)
-        console.log(clienteJson)
-        localStorage.setItem('cliente',clienteJson)
+        let clientes = JSON.parse(localStorage.getItem('clientes'))
+        clientes.push(cliente)
+
+        //Guardar en localStorage
+        const clientesJson = JSON.stringify(clientes)
+        localStorage.setItem('clientes',clientesJson)
     }
     else{
-        const limite = document.getElementById('limit')
-        let cliente = new VipClient(nombre, apellido, cedula)
-        cliente.limit(limite)
-        const clienteJson = JSON.stringify(cliente)
-        localStorage.setItem('cliente',clienteJson)
+        const limite = document.getElementById('limit').value
+
+        //Instanciar nuevo cliente
+        let cliente = new VipClient(nombre, apellido, cedula, limite)
+        let clientes = JSON.parse(localStorage.getItem('clientes'))
+        clientes.push(cliente)
+
+        //Guardar en localStorage
+        const clientesJson = JSON.stringify(clientes)
+        localStorage.setItem('clientes',clientesJson)
     }
 
 })

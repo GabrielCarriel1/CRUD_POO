@@ -34,28 +34,12 @@ class RegularClient extends Client{
     get discount(){
         return this._discount
     }
-
-    getJson(){
-        return {"cedula": this.ced, "nombre": this.firstname, "apellido": this.lastname, "valor": this.discount}
-    }
 }
 
 class VipClient extends Client{
-    constructor(firstname='Cliente', lastname='Final', ced='9999999999'){
+    constructor(firstname='Cliente', lastname='Final', ced='9999999999', limit=1000){
         super(firstname, lastname, ced)
-        this._limit = 1000
-    }
-
-    get limit(){
-        return this._limit
-    }
-
-    set limit(value){
-        this._limit = (value < 1000 || value > 2000) ? 1000 : value
-    }
-
-    getJson(){
-        return {"cedula": this.ced, "nombre": this.firstname, "apellido": this.lastname, "valor": this.limit}
+        this.limit = limit
     }
 }
 
