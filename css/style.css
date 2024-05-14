@@ -55,3 +55,7 @@ span .btn-primary:hover {
     background-color: #AB0C29;
 }
 
+.form-select {
+    margin-bottom: 20px;
+}
+
