@@ -68,6 +68,87 @@ form.addEventListener('submit', function(event){
     location.reload()
 })
 
+//Actualizar Cliente
+const btnActualizar = document.getElementById('btn-actualizar')
+const updSelect = document.getElementById('upd-select')
+const updateClient = document.getElementById('actualizar-cliente')
+
+btnActualizar.addEventListener('click', function(){
+    const clientes = JSON.parse(localStorage.getItem('clientes'))
+
+    clientes.forEach(function(cliente, index){
+        const option = document.createElement('option')
+        option.text = cliente._ced
+        option.value = index
+        updSelect.add(option)
+    })
+})
+updSelect.addEventListener('change', function(){
+    const clients = JSON.parse(localStorage.getItem('clientes'))
+    const clientIndex = updSelect.value
+    let client = clients[clientIndex]
+    document.getElementById('upd-name').value = client.firstname
+    document.getElementById('upd-last').value = client.lastname
+    const descInput = document.getElementById('upd-desc-input')
+    const limitInput = document.getElementById('upd-limit')
+    if(Object.keys(client).length > 4){
+        descInput.style.display = 'block'
+        limitInput.style.display = 'none'
+        document.getElementById('upd-desc').checked = (client._discount == 0.1) ? true : false
+    }
+    else{
+        descInput.style.display = 'none'
+        limitInput.style.display = 'block'
+        limitInput.value = client.limit
+    }
+})
+updateClient.addEventListener('click', function(){
+    const clients = JSON.parse(localStorage.getItem('clientes'))
+    const clientIndex = updSelect.value
+    let client = clients[clientIndex]
+    client.firstname = document.getElementById('upd-name').value
+    client.lastname = document.getElementById('upd-last').value
+    if(Object.keys(client).length > 4){
+        client.card = (document.getElementById('upd-desc').checked) ? true : false
+        client._discount = (client.card) ? 0.1 : 0
+    }else{
+        client.limit = document.getElementById('upd-limit').value
+    }
+    localStorage.setItem('clientes', JSON.stringify(clients))
+    location.reload()
+})
+
+
+//Eliminar Cliente
+const btnEliminar = document.getElementById('btn-eliminar')
+const delSelect = document.getElementById('del-select')
+const deleteClient = document.getElementById('eliminar-cliente')
+
+btnEliminar.addEventListener('click', function(){
+    const clientes = JSON.parse(localStorage.getItem('clientes'))
+
+    clientes.forEach(function(cliente, index){
+        const option = document.createElement('option')
+        option.text = cliente._ced
+        option.value = index
+        delSelect.add(option)
+    })
+})
+delSelect.addEventListener('change', function(){
+    const clients = JSON.parse(localStorage.getItem('clientes'))
+    const clientIndex = delSelect.value
+    document.getElementById('del-name').value = clients[clientIndex].firstname
+    document.getElementById('del-last').value = clients[clientIndex].lastname
+})
+deleteClient.addEventListener('click', function(){
+    const clients = JSON.parse(localStorage.getItem('clientes'))
+    const clientIndex = delSelect.value
+    clients.splice(clientIndex, 1)
+    localStorage.setItem('clientes', JSON.stringify(clients))
+    location.reload()
+})
+
+
 function validarCedula(cedula){
     if (cedula.length !== 10) {
         return false
@@ -89,37 +170,3 @@ function mensajeError(mensaje, elemento){
         errorDiv.style.display = 'block'
         elemento.focus()
 }
-
-//Actualizar Cliente
-
-//Eliminar Cliente
-const btnEliminar = document.getElementById('btn-eliminar')
-const selectClients = document.getElementById('clients-select')
-const deleteClient = document.getElementById('eliminar-cliente')
-
-
-btnEliminar.addEventListener('click', function(){
-    const clientes = JSON.parse(localStorage.getItem('clientes'))
-    const selectClients = document.getElementById('clients-select')
-
-    clientes.forEach(function(cliente, index){
-        const option = document.createElement('option')
-        option.text = cliente._ced
-        option.value = index
-        selectClients.add(option)
-    })
-})
-selectClients.addEventListener('change', function(){
-    const clients = JSON.parse(localStorage.getItem('clientes'))
-    const clientIndex = selectClients.value
-    document.getElementById('del-name').value = clients[clientIndex].firstname
-    document.getElementById('del-last').value = clients[clientIndex].lastname
-})
-deleteClient.addEventListener('click', function(){
-    const clients = JSON.parse(localStorage.getItem('clientes'))
-    const clientIndex = selectClients.value
-    clients.splice(clientIndex, 1)
-    localStorage.setItem('clientes', JSON.stringify(clients))
-    location.reload()
-})
-

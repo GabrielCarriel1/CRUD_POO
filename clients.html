@@ -62,7 +62,7 @@
             </table>
             <div class="button-container">
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-crear">Añadir</button>
-              <button type="button" class="btn btn-primary">Actualizar</button>
+              <button type="button" class="btn btn-primary" id="btn-actualizar" data-bs-toggle="modal" data-bs-target="#modal-actualizar">Actualizar</button>
               <span><button type="button" class="btn btn-primary" id="btn-eliminar" data-bs-toggle="modal" data-bs-target="#modal-eliminar">Eliminar</button></span>
             </div>
           </div>
@@ -157,7 +157,7 @@
               </div>
               <div class="modal-body">
                 <label for="clientes">Selecciona cliente:</label>
-                <select class="form-select" id="clients-select" aria-label="Default select example" >
+                <select class="form-select" id="del-select" aria-label="Default select example" >
                   <option selected>-----</option>
                 </select>
                 <div class="input-group mb-3">
@@ -170,6 +170,43 @@
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" id="eliminar-cliente" class="btn btn-primary">Eliminar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--MODAL ACTUALIZAR-->
+        <div class="modal fade" id="modal-actualizar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Actualizar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <label for="clientes">Selecciona cliente:</label>
+                <select class="form-select" id="upd-select" aria-label="Default select example" >
+                  <option selected>-----</option>
+                </select>
+                <div class="input-group mb-3">
+                  <input type="text" id="upd-name" class="form-control" placeholder="Nombre" aria-label="Nombre">
+                </div>
+                <div class="input-group mb-3">
+                  <input type="text" id="upd-last" class="form-control" placeholder="Apellido" aria-label="Apellido">
+                </div>
+                <div class="form-check" id="upd-desc-input"  style="display: none;">
+                  <input class="form-check-input" type="checkbox" value="true" id="upd-desc">
+                  <label class="form-check-label" for="desc">
+                    Descuento
+                  </label>
+                </div>
+                <div class="input-group mb-3">
+                  <input class="form-control" id="upd-limit" style="display: none;" type="number" placeholder="Límite de crédito">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="actualizar-cliente" class="btn btn-primary">Actualizar</button>
               </div>
             </div>
           </div>
