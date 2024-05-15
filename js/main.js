@@ -3,24 +3,30 @@ import {RegularClient, VipClient} from './client.js'
 document.addEventListener('DOMContentLoaded', function(){
     const clientsTable = document.getElementById('clients-table').getElementsByTagName('tbody')[0]
     const clients = JSON.parse(localStorage.getItem('clientes'))
-    clients.forEach(function(client){
-        const row = clientsTable.insertRow()
-        const nameCell = row.insertCell()
-        nameCell.textContent = client.firstname
-        const lastnameCell = row.insertCell()
-        lastnameCell.textContent = client.lastname
-        const cedCell = row.insertCell()
-        cedCell.textContent = client._ced
-        const typeCell = row.insertCell()
-        typeCell.textContent = Object.keys(client).length > 4 ? 'Cliente Regular' : 'Cliente VIP'
-        const valueCell = row.insertCell()
-        if (Object.keys(client).length > 4){
-            valueCell.textContent = (client._discount*100)+'%'
+    const clientesLS = localStorage.getItem('clientes')
+    if(clientesLS !== null){
+        const clientes = JSON.parse(clientesLS)
+        if(clientes.length > 0){
+            clients.forEach(function(client){
+                const row = clientsTable.insertRow()
+                const nameCell = row.insertCell()
+                nameCell.textContent = client.firstname
+                const lastnameCell = row.insertCell()
+                lastnameCell.textContent = client.lastname
+                const cedCell = row.insertCell()
+                cedCell.textContent = client._ced
+                const typeCell = row.insertCell()
+                typeCell.textContent = Object.keys(client).length > 4 ? 'Cliente Regular' : 'Cliente VIP'
+                const valueCell = row.insertCell()
+                if (Object.keys(client).length > 4){
+                    valueCell.textContent = (client._discount*100)+'%'
+                }
+                else{
+                    valueCell.textContent = '$'+client.limit
+                }
+            })
         }
-        else{
-            valueCell.textContent = '$'+client.limit
-        }
-    })
+    }
 })
 
 //AGREGAR CLIENTE
@@ -31,7 +37,14 @@ form.addEventListener('submit', function(event){
     const apellido = document.getElementById('client-lastname').value
     const cedula = document.getElementById('client-ced').value
     const radioCheck = document.getElementById('regularRadio')
-    let clientes = JSON.parse(localStorage.getItem('clientes'))
+
+    let clientes = []
+
+    const clientsLS = localStorage.getItem('clientes')
+    if(clientsLS !== null){
+        clientes = JSON.parse(clientsLS)
+    }
+
     if (validarCedula(cedula)){
         if(clientes.find(cliente => cliente._ced === cedula)){
             mensajeError('Esta cédula ya está registrada. Pruebe con otra', cedula)
@@ -74,14 +87,18 @@ const updSelect = document.getElementById('upd-select')
 const updateClient = document.getElementById('actualizar-cliente')
 
 btnActualizar.addEventListener('click', function(){
-    const clientes = JSON.parse(localStorage.getItem('clientes'))
-
-    clientes.forEach(function(cliente, index){
-        const option = document.createElement('option')
-        option.text = cliente._ced
-        option.value = index
-        updSelect.add(option)
-    })
+    const clientesLS = localStorage.getItem('clientes')
+    if(clientesLS !== null){
+        const clientes = JSON.parse(clientesLS)
+        if(clientes.length > 0){
+            clientes.forEach(function(cliente, index){
+                const option = document.createElement('option')
+                option.text = cliente._ced
+                option.value = index
+                updSelect.add(option)
+            })
+        }
+    }
 })
 updSelect.addEventListener('change', function(){
     const clients = JSON.parse(localStorage.getItem('clientes'))
@@ -125,14 +142,18 @@ const delSelect = document.getElementById('del-select')
 const deleteClient = document.getElementById('eliminar-cliente')
 
 btnEliminar.addEventListener('click', function(){
-    const clientes = JSON.parse(localStorage.getItem('clientes'))
-
-    clientes.forEach(function(cliente, index){
-        const option = document.createElement('option')
-        option.text = cliente._ced
-        option.value = index
-        delSelect.add(option)
-    })
+    const clientesLS = localStorage.getItem('clientes')
+    if(clientesLS !== null){
+        const clientes = JSON.parse(clientesLS)
+        if(clientes.length > 0){
+            clientes.forEach(function(cliente, index){
+                const option = document.createElement('option')
+                option.text = cliente._ced
+                option.value = index
+                delSelect.add(option)
+            })
+        }
+    }
 })
 delSelect.addEventListener('change', function(){
     const clients = JSON.parse(localStorage.getItem('clientes'))
