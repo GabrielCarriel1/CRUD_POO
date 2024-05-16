@@ -68,8 +68,31 @@ class UI {
   resetForm() {
     document.getElementById("product-form").reset();
   }
+  editProduct(element) {
+    if (element.name === "edit") {
+      const row = element.parentElement.parentElement;
+      const productId = parseInt(
+        row.querySelector("td:first-child").textContent
+      );
+      const code_product = row.querySelector("td:nth-child(2)").textContent;
+      const descrip = row.querySelector("td:nth-child(3)").textContent;
+      const preci = parseFloat(
+        row.querySelector("td:nth-child(4)").textContent
+      );
+      const quantity_product = parseInt(
+        row.querySelector("td:nth-child(5)").textContent
+      );
 
-  iditProduct(element) {}
+      // Rellenar los campos del formulario con los valores actuales del producto
+      document.getElementById("code_product").value = code_product;
+      document.getElementById("description").value = descrip;
+      document.getElementById("price").value = preci;
+      document.getElementById("quantity_product").value = quantity_product;
+
+      // Actualizar el ID actual con el ID del producto a editar
+      currentProductId = productId;
+    }
+  }
 
   deleteProduct(element) {
     if (element.name === "delete") {
@@ -162,6 +185,64 @@ document
     ui.resetForm();
     ui.showMessage("Producto agregado correctamente", "success");
   });
+// Event Listener para el formulario de productos (para editar o agregar)
+document
+  .getElementById("product-form")
+  .addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const code_product = document.getElementById("code_product").value;
+    const descrip = document.getElementById("description").value;
+    const preci = parseFloat(document.getElementById("price").value);
+    const quantity_product = parseInt(
+      document.getElementById("quantity_product").value
+    );
+
+    // Obtener los productos del localStorage
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+
+    // Buscar si el producto a agregar ya existe en la lista
+    const existingProductIndex = products.findIndex(
+      (product) => product._id === currentProductId
+    );
+
+    if (existingProductIndex !== -1) {
+      // Si el producto existe, actualizarlo
+      products[existingProductIndex] = new Product(
+        currentProductId,
+        code_product,
+        quantity_product,
+        descrip,
+        preci
+      );
+    } else {
+      // Si el producto no existe, agregarlo
+      products.push(
+        new Product(
+          currentProductId,
+          code_product,
+          quantity_product,
+          descrip,
+          preci
+        )
+      );
+    }
+
+    // Guardar los productos actualizados en el localStorage
+    localStorage.setItem("products", JSON.stringify(products));
+
+    // Actualizar la interfaz de usuario si es necesario
+    // (No está implementado aquí, necesitas añadirlo)
+
+    // Restaurar el texto del botón de enviar
+    document.getElementById("product-submit").textContent = "Agregar producto";
+
+    // Reiniciar el ID actual
+    currentProductId = 0;
+
+    ui.resetForm();
+    ui.showMessage("Producto guardado correctamente", "success");
+  });
 
 // Función para agregar el producto al localStorage
 function addToLocalStorage(product) {
@@ -185,4 +266,8 @@ function addToLocalStorage(product) {
 // Event Listener para eliminar productos
 container.addEventListener("click", function (e) {
   ui.deleteProduct(e.target);
+});
+// Event Listener para los botones de edición
+container.addEventListener("click", function (e) {
+  ui.editProduct(e.target);
 });
