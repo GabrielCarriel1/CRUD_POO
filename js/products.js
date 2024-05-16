@@ -6,30 +6,17 @@ class Product {
     code_product,
     quantity_product,
     descrip = "Ninguno",
-    preci = 0,
-    category_product
+    preci = 0
   ) {
     this._id = id;
     this.code_product = code_product;
     this.quantity_product = quantity_product;
     this.descrip = descrip;
     this.preci = preci;
-    this.category_product = category_product;
   }
 
   toString() {
-    return `Producto: ID=${this._id}, Código=${this.code_product}, Precio=${this.preci}, Descripción=${this.descrip}, Cantidad=${this.quantity_product}, Categoría=${this.category_product}`;
-  }
-
-  toJSON() {
-    return {
-      id: this._id,
-      code_product: this.code_product,
-      descripcion: this.descrip,
-      precio: this.preci,
-      cantidad: this.quantity_product,
-      categoria: this.category_product,
-    };
+    return `Producto: ID=${this._id}, Código=${this.code_product}, Precio=${this.preci}, Descripción=${this.descrip}, Cantidad=${this.quantity_product}`;
   }
 }
 
@@ -50,8 +37,9 @@ class UI {
               <th>Descripción</th>
               <th>Precio</th>
               <th>Cantidad</th>
-              <th>Categoría</th>
-              <th>Acciones</th>
+              
+              <th>Eliminar</th>
+              <th>Editar</th>
             </tr>
           </thead>
           <tbody id="product-list">
@@ -70,8 +58,9 @@ class UI {
       <td>${product.descrip}</td>
       <td>${product.preci}</td>
       <td>${product.quantity_product}</td>
-      <td>${product.category_product}</td>
+      
       <td><button class="btn btn-danger" name="delete">Eliminar</button></td>
+      <td><button class="btn btn-primary" name="edit">Editar</button></td>
     `;
     productList.appendChild(row);
   }
@@ -80,11 +69,41 @@ class UI {
     document.getElementById("product-form").reset();
   }
 
+  iditProduct(element) {}
+
   deleteProduct(element) {
     if (element.name === "delete") {
-      element.parentElement.parentElement.remove();
+      const row = element.parentElement.parentElement;
+      const productId = parseInt(
+        row.querySelector("td:first-child").textContent
+      ); // Obtener el ID del producto
+
+      // Eliminar el producto del localStorage
+      this.removeFromLocalStorage(productId);
+
+      // Eliminar la fila de la interfaz de usuario
+      row.remove();
       this.showMessage("Producto eliminado correctamente", "success");
     }
+  }
+
+  // Función para eliminar el producto del localStorage
+  removeFromLocalStorage(productId) {
+    let products;
+
+    // Verificar si hay productos en el localStorage
+    if (localStorage.getItem("products") === null) {
+      products = [];
+    } else {
+      // Obtener los productos del localStorage
+      products = JSON.parse(localStorage.getItem("products"));
+    }
+
+    // Filtrar el array de productos para eliminar el producto con el ID especificado
+    products = products.filter((product) => product._id !== productId);
+
+    // Actualizar el localStorage con el array de productos actualizado
+    localStorage.setItem("products", JSON.stringify(products));
   }
 
   showMessage(message, cssClass) {
@@ -124,7 +143,6 @@ document
     const quantity_product = parseInt(
       document.getElementById("quantity_product").value
     );
-    const category_product = document.getElementById("category").value;
 
     // Incrementar el ID actual
     currentProductId++;
@@ -134,14 +152,35 @@ document
       code_product,
       quantity_product,
       descrip,
-      preci,
-      category_product
+      preci
     );
+
+    // Agregar el producto al localStorage
+    addToLocalStorage(product);
 
     ui.addProduct(product);
     ui.resetForm();
     ui.showMessage("Producto agregado correctamente", "success");
   });
+
+// Función para agregar el producto al localStorage
+function addToLocalStorage(product) {
+  let products;
+
+  // Verificar si hay productos en el localStorage
+  if (localStorage.getItem("products") === null) {
+    products = [];
+  } else {
+    // Obtener los productos del localStorage
+    products = JSON.parse(localStorage.getItem("products"));
+  }
+
+  // Agregar el nuevo producto al array de productos
+  products.push(product);
+
+  // Guardar el array de productos actualizado en el localStorage
+  localStorage.setItem("products", JSON.stringify(products));
+}
 
 // Event Listener para eliminar productos
 container.addEventListener("click", function (e) {
