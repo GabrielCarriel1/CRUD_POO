@@ -33,8 +33,8 @@ class UI {
       row.innerHTML = `
         <td>${product._id}</td>
         <td>${product.code_product}</td>
-        <td>${product.price}</td>
-        <td>${product.description}</td>
+        <td>${product.preci}</td>
+        <td>${product.descrip}</td>
         <td>${product.quantity_product}</td>
         <td>
         <button name="delete" class="btn btn-danger btn-sm">Eliminar</button>
@@ -124,81 +124,4 @@ class UI {
   }
 }
 
-const ui = new UI();
-
-// Inicializar la tabla con los productos almacenados al cargar la página
-document.addEventListener("DOMContentLoaded", () => ui.updateUI());
-
-// Event Listener para el formulario de productos
-document
-  .getElementById("product-form")
-  .addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const code_product = document.getElementById("code_product").value;
-    const description = document.getElementById("description").value;
-    const price = parseFloat(document.getElementById("price").value);
-    const quantity_product = parseInt(
-      document.getElementById("quantity_product").value
-    );
-
-    let products = JSON.parse(localStorage.getItem("products")) || [];
-
-    // Buscar si el producto a agregar ya existe en la lista
-    const existingProductIndex = products.findIndex(
-      (product) => product._id === currentProductId
-    );
-
-    if (existingProductIndex !== -1) {
-      // Si el producto existe, actualizarlo
-      products[existingProductIndex] = new Product(
-        currentProductId,
-        code_product,
-        quantity_product,
-        description,
-        price
-      );
-    } else {
-      // Incrementar el ID actual
-      currentProductId = products.length
-        ? products[products.length - 1]._id + 1
-        : 1;
-
-      // Si el producto no existe, agregarlo
-      products.push(
-        new Product(
-          currentProductId,
-          code_product,
-          quantity_product,
-          description,
-          price
-        )
-      );
-    }
-
-    // Guardar los productos actualizados en el localStorage
-    localStorage.setItem("products", JSON.stringify(products));
-
-    // Actualizar la interfaz de usuario
-    ui.updateUI();
-
-    // Restaurar el texto del botón de enviar
-    document.getElementById("product-submit").textContent = "Agregar producto";
-
-    // Reiniciar el ID actual
-    currentProductId = 0;
-
-    ui.resetForm();
-    ui.showMessage("Producto guardado correctamente", "success");
-  });
-
-// Event Listener para eliminar productos
-document
-  .getElementById("products-table-body")
-  .addEventListener("click", function (e) {
-    if (e.target.name === "delete") {
-      ui.deleteProduct(e.target);
-    } else if (e.target.name === "edit") {
-      ui.editProduct(e.target);
-    }
-  });
+export { Product, UI, currentProductId };

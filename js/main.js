@@ -1,193 +1,269 @@
-import {RegularClient, VipClient} from './client.js'
+import { RegularClient, VipClient } from "./client.js";
+import { Product, UI, currentProductId } from "./products.js";
 
-document.addEventListener('DOMContentLoaded', function(){
-    const clientsTable = document.getElementById('clients-table').getElementsByTagName('tbody')[0]
-    const clients = JSON.parse(localStorage.getItem('clientes'))
-    const clientesLS = localStorage.getItem('clientes')
-    if(clientesLS !== null){
-        const clientes = JSON.parse(clientesLS)
-        if(clientes.length > 0){
-            clients.forEach(function(client){
-                const row = clientsTable.insertRow()
-                const nameCell = row.insertCell()
-                nameCell.textContent = client.firstname
-                const lastnameCell = row.insertCell()
-                lastnameCell.textContent = client.lastname
-                const cedCell = row.insertCell()
-                cedCell.textContent = client._ced
-                const typeCell = row.insertCell()
-                typeCell.textContent = Object.keys(client).length > 4 ? 'Cliente Regular' : 'Cliente VIP'
-                const valueCell = row.insertCell()
-                if (Object.keys(client).length > 4){
-                    valueCell.textContent = (client._discount*100)+'%'
-                }
-                else{
-                    valueCell.textContent = '$'+client.limit
-                }
-            })
+document.addEventListener("DOMContentLoaded", function () {
+  const clientsTable = document
+    .getElementById("clients-table")
+    .getElementsByTagName("tbody")[0];
+  const clients = JSON.parse(localStorage.getItem("clientes"));
+  const clientesLS = localStorage.getItem("clientes");
+  if (clientesLS !== null) {
+    const clientes = JSON.parse(clientesLS);
+    if (clientes.length > 0) {
+      clients.forEach(function (client) {
+        const row = clientsTable.insertRow();
+        const nameCell = row.insertCell();
+        nameCell.textContent = client.firstname;
+        const lastnameCell = row.insertCell();
+        lastnameCell.textContent = client.lastname;
+        const cedCell = row.insertCell();
+        cedCell.textContent = client._ced;
+        const typeCell = row.insertCell();
+        typeCell.textContent =
+          Object.keys(client).length > 4 ? "Cliente Regular" : "Cliente VIP";
+        const valueCell = row.insertCell();
+        if (Object.keys(client).length > 4) {
+          valueCell.textContent = client._discount * 100 + "%";
+        } else {
+          valueCell.textContent = "$" + client.limit;
         }
+      });
     }
-})
+  }
+});
 
 //AGREGAR CLIENTE
-const form = document.getElementById('client-form')
-form.addEventListener('submit', function(event){
-    event.preventDefault()
-    const nombre = document.getElementById('client-name').value
-    const apellido = document.getElementById('client-lastname').value
-    const cedula = document.getElementById('client-ced').value
-    const radioCheck = document.getElementById('regularRadio')
+const form = document.getElementById("client-form");
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
+  const nombre = document.getElementById("client-name").value;
+  const apellido = document.getElementById("client-lastname").value;
+  const cedula = document.getElementById("client-ced").value;
+  const radioCheck = document.getElementById("regularRadio");
 
-    let clientes = []
+  let clientes = [];
 
-    const clientsLS = localStorage.getItem('clientes')
-    if(clientsLS !== null){
-        clientes = JSON.parse(clientsLS)
-    }
+  const clientsLS = localStorage.getItem("clientes");
+  if (clientsLS !== null) {
+    clientes = JSON.parse(clientsLS);
+  }
 
-    if (validarCedula(cedula)){
-        if(clientes.find(cliente => cliente._ced === cedula)){
-            mensajeError('Esta cédula ya está registrada. Pruebe con otra', cedula)
-        }
-        else{
-            if(radioCheck.checked){
-                const descCheck = document.getElementById('desc')
-                let card = descCheck.checked
-        
-                //Instanciar nuevo cliente
-                let cliente = new RegularClient(nombre, apellido, cedula, card)
-                clientes.push(cliente)
-        
-                //Guardar en localStorage
-                const clientesJson = JSON.stringify(clientes)
-                localStorage.setItem('clientes',clientesJson)
-            }
-            else{
-                const limite = document.getElementById('limit').value
-        
-                //Instanciar nuevo cliente
-                let cliente = new VipClient(nombre, apellido, cedula, limite)
-                clientes.push(cliente)
-        
-                //Guardar en localStorage
-                const clientesJson = JSON.stringify(clientes)
-                localStorage.setItem('clientes',clientesJson)
-            }
-        }
+  if (validarCedula(cedula)) {
+    if (clientes.find((cliente) => cliente._ced === cedula)) {
+      mensajeError("Esta cédula ya está registrada. Pruebe con otra", cedula);
+    } else {
+      if (radioCheck.checked) {
+        const descCheck = document.getElementById("desc");
+        let card = descCheck.checked;
+
+        //Instanciar nuevo cliente
+        let cliente = new RegularClient(nombre, apellido, cedula, card);
+        clientes.push(cliente);
+
+        //Guardar en localStorage
+        const clientesJson = JSON.stringify(clientes);
+        localStorage.setItem("clientes", clientesJson);
+      } else {
+        const limite = document.getElementById("limit").value;
+
+        //Instanciar nuevo cliente
+        let cliente = new VipClient(nombre, apellido, cedula, limite);
+        clientes.push(cliente);
+
+        //Guardar en localStorage
+        const clientesJson = JSON.stringify(clientes);
+        localStorage.setItem("clientes", clientesJson);
+      }
     }
-    else{
-        mensajeError('Cédula invalida')
-    }
-    location.reload()
-})
+  } else {
+    mensajeError("Cédula invalida");
+  }
+  location.reload();
+});
 
 //Actualizar Cliente
-const btnActualizar = document.getElementById('btn-actualizar')
-const updSelect = document.getElementById('upd-select')
-const updateClient = document.getElementById('actualizar-cliente')
+const btnActualizar = document.getElementById("btn-actualizar");
+const updSelect = document.getElementById("upd-select");
+const updateClient = document.getElementById("actualizar-cliente");
 
-btnActualizar.addEventListener('click', function(){
-    const clientesLS = localStorage.getItem('clientes')
-    if(clientesLS !== null){
-        const clientes = JSON.parse(clientesLS)
-        if(clientes.length > 0){
-            clientes.forEach(function(cliente, index){
-                const option = document.createElement('option')
-                option.text = cliente._ced
-                option.value = index
-                updSelect.add(option)
-            })
-        }
+btnActualizar.addEventListener("click", function () {
+  const clientesLS = localStorage.getItem("clientes");
+  if (clientesLS !== null) {
+    const clientes = JSON.parse(clientesLS);
+    if (clientes.length > 0) {
+      clientes.forEach(function (cliente, index) {
+        const option = document.createElement("option");
+        option.text = cliente._ced;
+        option.value = index;
+        updSelect.add(option);
+      });
     }
-})
-updSelect.addEventListener('change', function(){
-    const clients = JSON.parse(localStorage.getItem('clientes'))
-    const clientIndex = updSelect.value
-    let client = clients[clientIndex]
-    document.getElementById('upd-name').value = client.firstname
-    document.getElementById('upd-last').value = client.lastname
-    const descInput = document.getElementById('upd-desc-input')
-    const limitInput = document.getElementById('upd-limit')
-    if(Object.keys(client).length > 4){
-        descInput.style.display = 'block'
-        limitInput.style.display = 'none'
-        document.getElementById('upd-desc').checked = (client._discount == 0.1) ? true : false
-    }
-    else{
-        descInput.style.display = 'none'
-        limitInput.style.display = 'block'
-        limitInput.value = client.limit
-    }
-})
-updateClient.addEventListener('click', function(){
-    const clients = JSON.parse(localStorage.getItem('clientes'))
-    const clientIndex = updSelect.value
-    let client = clients[clientIndex]
-    client.firstname = document.getElementById('upd-name').value
-    client.lastname = document.getElementById('upd-last').value
-    if(Object.keys(client).length > 4){
-        client.card = (document.getElementById('upd-desc').checked) ? true : false
-        client._discount = (client.card) ? 0.1 : 0
-    }else{
-        client.limit = document.getElementById('upd-limit').value
-    }
-    localStorage.setItem('clientes', JSON.stringify(clients))
-    location.reload()
-})
-
+  }
+});
+updSelect.addEventListener("change", function () {
+  const clients = JSON.parse(localStorage.getItem("clientes"));
+  const clientIndex = updSelect.value;
+  let client = clients[clientIndex];
+  document.getElementById("upd-name").value = client.firstname;
+  document.getElementById("upd-last").value = client.lastname;
+  const descInput = document.getElementById("upd-desc-input");
+  const limitInput = document.getElementById("upd-limit");
+  if (Object.keys(client).length > 4) {
+    descInput.style.display = "block";
+    limitInput.style.display = "none";
+    document.getElementById("upd-desc").checked =
+      client._discount == 0.1 ? true : false;
+  } else {
+    descInput.style.display = "none";
+    limitInput.style.display = "block";
+    limitInput.value = client.limit;
+  }
+});
+updateClient.addEventListener("click", function () {
+  const clients = JSON.parse(localStorage.getItem("clientes"));
+  const clientIndex = updSelect.value;
+  let client = clients[clientIndex];
+  client.firstname = document.getElementById("upd-name").value;
+  client.lastname = document.getElementById("upd-last").value;
+  if (Object.keys(client).length > 4) {
+    client.card = document.getElementById("upd-desc").checked ? true : false;
+    client._discount = client.card ? 0.1 : 0;
+  } else {
+    client.limit = document.getElementById("upd-limit").value;
+  }
+  localStorage.setItem("clientes", JSON.stringify(clients));
+  location.reload();
+});
 
 //Eliminar Cliente
-const btnEliminar = document.getElementById('btn-eliminar')
-const delSelect = document.getElementById('del-select')
-const deleteClient = document.getElementById('eliminar-cliente')
+const btnEliminar = document.getElementById("btn-eliminar");
+const delSelect = document.getElementById("del-select");
+const deleteClient = document.getElementById("eliminar-cliente");
 
-btnEliminar.addEventListener('click', function(){
-    const clientesLS = localStorage.getItem('clientes')
-    if(clientesLS !== null){
-        const clientes = JSON.parse(clientesLS)
-        if(clientes.length > 0){
-            clientes.forEach(function(cliente, index){
-                const option = document.createElement('option')
-                option.text = cliente._ced
-                option.value = index
-                delSelect.add(option)
-            })
-        }
+btnEliminar.addEventListener("click", function () {
+  const clientesLS = localStorage.getItem("clientes");
+  if (clientesLS !== null) {
+    const clientes = JSON.parse(clientesLS);
+    if (clientes.length > 0) {
+      clientes.forEach(function (cliente, index) {
+        const option = document.createElement("option");
+        option.text = cliente._ced;
+        option.value = index;
+        delSelect.add(option);
+      });
     }
-})
-delSelect.addEventListener('change', function(){
-    const clients = JSON.parse(localStorage.getItem('clientes'))
-    const clientIndex = delSelect.value
-    document.getElementById('del-name').value = clients[clientIndex].firstname
-    document.getElementById('del-last').value = clients[clientIndex].lastname
-})
-deleteClient.addEventListener('click', function(){
-    const clients = JSON.parse(localStorage.getItem('clientes'))
-    const clientIndex = delSelect.value
-    clients.splice(clientIndex, 1)
-    localStorage.setItem('clientes', JSON.stringify(clients))
-    location.reload()
-})
+  }
+});
+delSelect.addEventListener("change", function () {
+  const clients = JSON.parse(localStorage.getItem("clientes"));
+  const clientIndex = delSelect.value;
+  document.getElementById("del-name").value = clients[clientIndex].firstname;
+  document.getElementById("del-last").value = clients[clientIndex].lastname;
+});
+deleteClient.addEventListener("click", function () {
+  const clients = JSON.parse(localStorage.getItem("clientes"));
+  const clientIndex = delSelect.value;
+  clients.splice(clientIndex, 1);
+  localStorage.setItem("clientes", JSON.stringify(clients));
+  location.reload();
+});
 
-
-function validarCedula(cedula){
-    if (cedula.length !== 10) {
-        return false
-    }
-    var coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2]
-    var verificador = parseInt(cedula.charAt(9))
-    var suma = 0
-    for (var i = 0; i < 9; i++) {
-        var digito = parseInt(cedula.charAt(i)) * coeficientes[i]
-        suma += (digito >= 10) ? digito - 9 : digito
-    }
-    var decimoDigito = (10 - (suma % 10)) % 10
-    return verificador === decimoDigito
+function validarCedula(cedula) {
+  if (cedula.length !== 10) {
+    return false;
+  }
+  var coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+  var verificador = parseInt(cedula.charAt(9));
+  var suma = 0;
+  for (var i = 0; i < 9; i++) {
+    var digito = parseInt(cedula.charAt(i)) * coeficientes[i];
+    suma += digito >= 10 ? digito - 9 : digito;
+  }
+  var decimoDigito = (10 - (suma % 10)) % 10;
+  return verificador === decimoDigito;
 }
 
-function mensajeError(mensaje, elemento){
-    const errorDiv = document.getElementById('cedula-error')
-        errorDiv.textContent = mensaje
-        errorDiv.style.display = 'block'
-        elemento.focus()
+function mensajeError(mensaje, elemento) {
+  const errorDiv = document.getElementById("cedula-error");
+  errorDiv.textContent = mensaje;
+  errorDiv.style.display = "block";
+  elemento.focus();
 }
+const ui = new UI();
+
+// Inicializar la tabla con los productos almacenados al cargar la página
+document.addEventListener("DOMContentLoaded", () => ui.updateUI());
+
+// Event Listener para el formulario de productos
+document
+  .getElementById("product-form")
+  .addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const code_product = document.getElementById("code_product").value;
+    const description = document.getElementById("description").value;
+    const price = parseFloat(document.getElementById("price").value);
+    const quantity_product = parseInt(
+      document.getElementById("quantity_product").value
+    );
+
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+
+    // Buscar si el producto a agregar ya existe en la lista
+    const existingProductIndex = products.findIndex(
+      (product) => product._id === currentProductId
+    );
+
+    if (existingProductIndex !== -1) {
+      // Si el producto existe, actualizarlo
+      products[existingProductIndex] = new Product(
+        currentProductId,
+        code_product,
+        quantity_product,
+        description,
+        price
+      );
+    } else {
+      // Incrementar el ID actual
+      currentProductId = products.length
+        ? products[products.length - 1]._id + 1
+        : 1;
+
+      // Si el producto no existe, agregarlo
+      products.push(
+        new Product(
+          currentProductId,
+          code_product,
+          quantity_product,
+          description,
+          price
+        )
+      );
+    }
+
+    // Guardar los productos actualizados en el localStorage
+    localStorage.setItem("products", JSON.stringify(products));
+
+    // Actualizar la interfaz de usuario
+    ui.updateUI();
+
+    // Restaurar el texto del botón de enviar
+    document.getElementById("product-submit").textContent = "Agregar producto";
+
+    // Reiniciar el ID actual
+    currentProductId = 0;
+
+    ui.resetForm();
+    ui.showMessage("Producto guardado correctamente", "success");
+  });
+
+// Event Listener para eliminar productos
+document
+  .getElementById("products-table-body")
+  .addEventListener("click", function (e) {
+    if (e.target.name === "delete") {
+      ui.deleteProduct(e.target);
+    } else if (e.target.name === "edit") {
+      ui.editProduct(e.target);
+    }
+  });
