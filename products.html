@@ -13,7 +13,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/bootstrap.css" />
-    <link rel="icon" href="images/main-icon.ico" type="image/x-icon">
+    <link rel="icon" href="images/main-icon.ico" type="image/x-icon" />
   </head>
 
   <body>
@@ -32,11 +32,7 @@
         <div class="container">
           <!-- Logo -->
           <a class="navbar-brand" href="#">
-            <img
-              src="images/main-icon.png"
-              alt="Logo"
-              height="55"
-            />
+            <img src="images/main-icon.png" alt="Logo" height="55" />
           </a>
 
           <!-- Toggler button -->
@@ -84,77 +80,93 @@
               <h4>AGREGAR PRODUCTOS</h4>
             </div>
             <form id="product-form" class="card-body">
-              <div class="form-group">
-                <label for="code_product">Código Producto</label>
-                <input
-                  type="text"
-                  id="code_product"
-                  name="code_product"
-                  placeholder="Ingrese el código"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="price">Precio Producto:</label>
-                <input
-                  type="number"
-                  id="price"
-                  name="price"
-                  min="0.1"
-                  step="0.01"
-                  placeholder="Ingrese el precio"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="description">Descripción Producto:</label>
-                <input
-                  type="text"
-                  id="description"
-                  name="description"
-                  placeholder="Ingrese la descripción"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="quantity_product">Cantidad Producto</label>
-                <input
-                  type="number"
-                  id="quantity_product"
-                  name="quantity_product"
-                  min="0"
-                  placeholder="Ingrese la cantidad"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="category">Categoría:</label>
-                <select
-                  id="category"
-                  name="category"
-                  class="form-control"
-                  required
+              <table class="table table-bordered">
+                <div class="form-group">
+                  <label for="code_product">Código Producto</label>
+                  <input
+                    type="text"
+                    id="code_product"
+                    name="code_product"
+                    placeholder="Ingrese el código"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="price">Precio Producto:</label>
+                  <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    min="0.1"
+                    step="0.01"
+                    placeholder="Ingrese el precio"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="description">Descripción Producto:</label>
+                  <input
+                    type="text"
+                    id="description"
+                    name="description"
+                    placeholder="Ingrese la descripción"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="quantity_product">Cantidad Producto</label>
+                  <input
+                    type="number"
+                    id="quantity_product"
+                    name="quantity_product"
+                    min="0"
+                    placeholder="Ingrese la cantidad"
+                    class="form-control"
+                    required
+                  />
+                </div>
+
+                <button
+                  id="product-submit"
+                  type="submit"
+                  class="btn btn-primary"
                 >
-                  <option value="">Seleccionar Categoría</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="clothing">Clothing</option>
-                  <option value="books">Books</option>
-                  <!-- Agrega más opciones de categorías según sea necesario -->
-                </select>
-              </div>
-              <input
-                type="submit"
-                value="Save"
-                class="btn btn-success btn-block"
-              />
+                  Agregar producto
+                </button>
+              </table>
             </form>
           </div>
         </div>
-        <div id="product-list" class="col-md-6"></div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header text-center">
+              <h4>PRODUCTOS AGREGADOS</h4>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>CODIGO</th>
+                      <th>PRECIO</th>
+                      <th>DESCRIPCIÓN</th>
+                      <th>CANTIDAD</th>
+                      <th>ELIMINAR</th>
+                      <th>EDITAR</th>
+                    </tr>
+                  </thead>
+                  <tbody id="products-table-body">
+                    <!-- Aquí se insertarán las filas de productos -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
